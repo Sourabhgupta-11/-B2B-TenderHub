@@ -4,6 +4,7 @@ const User = require('./../models/User.js');
 const {generateToken}=require('./../middleware/auth.js')
 
 router.post('/signup', async (req, res) => {
+    const success=false
     try {
         const data = req.body;
         const newUser = new User(data);
@@ -14,21 +15,22 @@ router.post('/signup', async (req, res) => {
             email: response.email
         }
         const token=generateToken(payload)
-        res.status(200).json({response: response,token: token});
+        res.status(200).json({success:true,response: response,token: token});
     } 
     catch (err) {
         console.error("Signup error:", err); 
-        res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({success, error: 'Internal Server Error' });
     }
 });
 
 router.post('/login', async (req,res)=>{
+    const success=false
     try{
         const {email,password}=req.body;
         const user=await User.findOne({email:email})
 
         if(!user || !(await user.comparePassword(password))){
-            return res.status(401).json({error: 'Invalid email or password'})
+            return res.status(401).json({success,error: 'Invalid email or password'})
         }
 
         const payload={
@@ -36,11 +38,11 @@ router.post('/login', async (req,res)=>{
             email: user.email
         }
         const token=generateToken(payload)
-        res.json({token})
+        res.json({success:true,token})
     }
     catch(err){
         console.log(err)
-        res.status(500).json({err:"Internal Server Error"})
+        res.status(500).json({success,err:"Internal Server Error"})
     }
 })
 
