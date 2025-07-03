@@ -14,7 +14,12 @@ app.get('/',(req,res)=>{
 
 //---------------------------------ROUTES----------------------------------//
 const authRoutes=require('./routes/authRoutes.js')
+const companyRoutes=require('./routes/companyRoutes.js')
+const tenderRoutes=require('./routes/tenderRoutes.js')
+
 app.use('/api/auth',authRoutes)
+app.use('/api/company',companyRoutes)
+app.use('/api/tender',tenderRoutes)
 
 //-------------------------------------------------------------------------//
 
