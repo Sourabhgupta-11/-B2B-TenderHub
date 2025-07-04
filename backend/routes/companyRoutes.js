@@ -25,6 +25,32 @@ router.post('/create', jwtAuthMiddleware, upload.single('logo'), async (req, res
   }
 });
 
+router.get('/me', jwtAuthMiddleware, async (req, res) => {
+  try {
+    const userId= req.user.id;
+
+
+    const company = await Company.findOne({ userId}).populate('userId', 'email');
+
+    if (!company) {
+      return res.status(404).json({ success: false, error: 'Company not found' });
+    }
+
+    res.json({
+      success: true,
+      _id: company._id,
+      name: company.name,
+      email: company.userId.email,
+      industry: company.industry,
+      description: company.description,
+      products: company.products,
+      logoUrl: company.logoUrl
+    });
+  } catch (err) {
+    console.error('Error in /me:', err);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+});
 // Get all companies
 router.get('/', async (req, res) => {
   try {

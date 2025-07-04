@@ -5,7 +5,7 @@ const tenderSchema = new mongoose.Schema({
   description: String,
   deadline: Date,
   budget: Number,
-  companyId: { type: mongoose.Schema.Types.ObjectId, ref: 'Company' }
-});
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'Company', required:true}
+},{timestamps:true});
 
 module.exports = mongoose.model('Tender', tenderSchema);

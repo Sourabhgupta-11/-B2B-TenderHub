@@ -1,19 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const Tender = require('../models/Tender');
-const { jwtAuthMiddleware } = require('./../middleware/auth.js');
+const Company = require('../models/Company');
+const { jwtAuthMiddleware } = require('../middleware/auth');
 
 // Create a new tender
 router.post('/create', jwtAuthMiddleware, async (req, res) => {
   try {
     const { title, description, deadline, budget } = req.body;
 
+    const company = await Company.findOne({ userId: req.user.id });
+    if (!company) {
+      return res.status(404).json({ error: 'Company not found' });
+    }
+
     const newTender = await Tender.create({
       title,
       description,
       deadline,
       budget,
-      createdBy: req.user.id
+      createdBy: company._id,
     });
 
     res.status(201).json(newTender);
@@ -22,7 +28,22 @@ router.post('/create', jwtAuthMiddleware, async (req, res) => {
   }
 });
 
-// Get all tenders that is paginated
+// Get tenders created by the logged-in company
+router.get('/myTender', jwtAuthMiddleware, async (req, res) => {
+  try {
+    const company = await Company.findOne({ userId: req.user.id });
+    if (!company) {
+      return res.status(404).json({ error: 'Company not found' });
+    }
+
+    const tenders = await Tender.find({ createdBy: company._id }).sort({ createdAt: -1 });
+    res.json(tenders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Get all tenders (paginated)
 router.get('/', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -31,6 +52,7 @@ router.get('/', async (req, res) => {
 
     const total = await Tender.countDocuments();
     const tenders = await Tender.find()
+      .populate('createdBy', 'name industry') // optional: show who created it
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);
@@ -46,20 +68,10 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get tenders created by the logged-in company
-router.get('/myTender', jwtAuthMiddleware, async (req, res) => {
-  try {
-    const tenders = await Tender.find({ createdBy: req.user.id }).sort({ createdAt: -1 });
-    res.json(tenders);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 // Get single tender by ID
 router.get('/:id', async (req, res) => {
   try {
-    const tender = await Tender.findById(req.params.id);
+    const tender = await Tender.findById(req.params.id).populate('createdBy', 'name');
     if (!tender) return res.status(404).json({ error: 'Tender not found' });
     res.json(tender);
   } catch (err) {
@@ -70,13 +82,18 @@ router.get('/:id', async (req, res) => {
 // Update tender
 router.put('/:id', jwtAuthMiddleware, async (req, res) => {
   try {
-    const updated = await Tender.findByIdAndUpdate(
-      req.params.id,
+    const company = await Company.findOne({ userId: req.user.id });
+    if (!company) return res.status(404).json({ error: 'Company not found' });
+
+    const tender = await Tender.findOneAndUpdate(
+      { _id: req.params.id, createdBy: company._id },
       req.body,
       { new: true }
     );
-    if (!updated) return res.status(404).json({ error: 'Tender not found' });
-    res.json(updated);
+
+    if (!tender) return res.status(404).json({ error: 'Tender not found or not authorized' });
+
+    res.json(tender);
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -85,8 +102,13 @@ router.put('/:id', jwtAuthMiddleware, async (req, res) => {
 // Delete tender
 router.delete('/:id', jwtAuthMiddleware, async (req, res) => {
   try {
-    const deleted = await Tender.findByIdAndDelete(req.params.id);
-    if (!deleted) return res.status(404).json({ error: 'Tender not found' });
+    const company = await Company.findOne({ userId: req.user.id });
+    if (!company) return res.status(404).json({ error: 'Company not found' });
+
+    const tender = await Tender.findOneAndDelete({ _id: req.params.id, createdBy: company._id });
+
+    if (!tender) return res.status(404).json({ error: 'Tender not found or not authorized' });
+
     res.json({ message: 'Tender deleted' });
   } catch (err) {
     res.status(500).json({ error: err.message });
