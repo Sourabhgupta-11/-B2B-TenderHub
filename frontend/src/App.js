@@ -8,6 +8,7 @@ import MyTendersPage from './pages/MyTenders.js';
 import CreateCompanyPage from './pages/CreateCompany.js';
 import Navbar from './components/Navbar.js';
 import BrowseTendersPage from './pages/BrowseTenders'; 
+import CompanySearchPage from './pages/CompanySearch.js';
 
 function App() {
   const isLoggedIn = !!localStorage.getItem('token');
@@ -25,6 +26,7 @@ function App() {
         <Route path="/tenders" element={isLoggedIn ? <MyTendersPage/> : <Navigate to="/login" />} />
         <Route path="/create-tender" element={isLoggedIn ? <CreateTenderPage/> : <Navigate to="/login" />} />
         <Route path="/browse" element={isLoggedIn ? <BrowseTendersPage /> : <Navigate to="/login" />} />
+        <Route path="/companies" element={<CompanySearchPage />} />
       </Routes>
     </Router>
   );

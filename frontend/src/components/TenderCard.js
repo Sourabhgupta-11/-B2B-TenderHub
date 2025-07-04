@@ -2,14 +2,14 @@ import React from 'react';
 
 const TenderCard = ({tender,showApply = false,onApply,showEditDelete = false,onEdit,onDelete,}) => {
   
-  const {title,description,deadline,budget,createdBy,} = tender;
+  const {title,description,deadline,budget,createdBy,} = tender
 
   return (
     <div className="card h-100 shadow-sm border-0">
       <div className="card-header bg-light">
         <h6 className="mb-0 text-muted">
           <i className="bi bi-building me-2"></i>
-          Published by: <strong>{createdBy?.name || 'Unknown Company'}</strong>
+          Published by: <strong>{createdBy?.name ||'Unknown Company'}</strong>
         </h6>
       </div>
 

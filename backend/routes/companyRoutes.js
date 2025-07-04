@@ -61,7 +61,7 @@ router.get('/', async (req, res) => {
     if (industry) filter.industry = new RegExp(industry, 'i');
     if (products) filter.products = { $in: [new RegExp(products, 'i')] };
 
-    const companies = await Company.find(filter);
+    const companies = await Company.find(filter).populate('userId','email');
     res.json(companies);
   } catch (err) {
     res.status(500).json({ error: err.message });

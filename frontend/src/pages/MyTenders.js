@@ -70,7 +70,7 @@ const MyTendersPage = () => {
 
   return (
     <div className="container mt-5">
-      <h3 className="mb-4 text-primary">My Tenders</h3>;
+      <h3 className="mb-4 text-primary">My Tenders</h3>
 
 {/*----------------------------------------works only if edit button clicked-----------------------------------*/ }
       {editingId && (                                  

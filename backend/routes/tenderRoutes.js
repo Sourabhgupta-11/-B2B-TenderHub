@@ -36,7 +36,7 @@ router.get('/myTender', jwtAuthMiddleware, async (req, res) => {
       return res.status(404).json({ error: 'Company not found' });
     }
 
-    const tenders = await Tender.find({ createdBy: company._id }).sort({ createdAt: -1 });
+    const tenders = await Tender.find({ createdBy: company._id }).populate('createdBy','name').sort({ createdAt: -1 });
     res.json(tenders);
   } catch (err) {
     res.status(500).json({ error: err.message });
