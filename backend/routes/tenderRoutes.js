@@ -68,6 +68,26 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Get tenders created by other companies (excluding the current user's company)
+router.get('/others', jwtAuthMiddleware, async (req, res) => {
+  try {
+    const currentUserId = req.user.id;
+    
+    const company = await Company.findOne({ userId: currentUserId });
+    if (!company) {
+      return res.status(404).json({ success: false, error: 'Company not found' });
+    }
+
+    const tenders = await Tender.find({ createdBy: { $ne: company._id } })
+      .sort({ createdAt: -1 })
+      .populate('createdBy', 'name');
+
+    res.json(tenders);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // Get single tender by ID
 router.get('/:id', async (req, res) => {
   try {

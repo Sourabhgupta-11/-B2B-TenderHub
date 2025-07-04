@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../api/axiosConfig';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const [company, setCompany] = useState(null);
@@ -33,69 +34,83 @@ const Dashboard = () => {
   }
 
   const data = company?.success ? company : null;
-  
 
   return (
-    <div className="container mt-5">
-      <h2 className="mb-4 text-primary fw-bold">Company Dashboard</h2>
+    <div className="container mt-4">
+      <h2 className="text-center fw-bold text-primary mb-5">Company Dashboard</h2>
 
-      <div className="card shadow-sm">
-        <div className="card-body">
-          <div className="row g-4 align-items-center">
-            {/* Logo Section */}
-            <div className="col-md-3 text-center">
-              {data?.logoUrl ? (
-                <img
-                  src={data.logoUrl}
-                  alt="Company Logo"
-                  className="img-fluid rounded"
-                  style={{ maxHeight: '130px' }}
-                />
+
+      <div className="card shadow-sm p-4 mb-5">
+        <div className="row align-items-center">
+          <div className="col-md-3 text-center mb-4 mb-md-0">
+            {data?.logoUrl ? (
+              <img
+                src={data.logoUrl}
+                alt="Company Logo"
+                className="img-fluid rounded border"
+                style={{ maxHeight: '130px' }}
+              />
+            ) : (
+              <div className="border rounded p-4 text-muted">No Logo Uploaded</div>
+            )}
+            <Link to="/edit-company" className="btn btn-outline-secondary btn-sm mt-3">
+              Edit Profile
+            </Link>
+          </div>
+
+
+          <div className="col-md-9">
+            <h3 className="fw-semibold text-dark">{data.name}</h3>
+            <hr className="text-muted" />
+            <p className="mb-2">
+              <span className="fw-semibold text-muted">📧 Email:</span>{' '}
+              <span>{data.email || <em className="text-muted">Not available</em>}</span>
+            </p>
+            <p className="mb-2">
+              <span className="fw-semibold text-muted">🏭 Industry:</span> {data.industry}
+            </p>
+            <p className="mb-2">
+              <span className="fw-semibold text-muted">📝 Description:</span> {data.description}
+            </p>
+            <p className="mb-2">
+              <span className="fw-semibold text-muted">🧰 Products/Services:</span>{' '}
+              {data.products?.length ? (
+                <ul className="mb-0 ps-3 mt-1">
+                  {data.products.map((p, i) => (
+                    <li key={i}>{p}</li>
+                  ))}
+                </ul>
               ) : (
-                <div className="text-muted border rounded p-3">No Logo Uploaded</div>
+                <span className="text-muted">Not listed</span>
               )}
-              <button className="btn btn-outline-secondary btn-sm mt-3">
-                Edit Profile
-              </button>
-            </div>
-
-            {/* Info Section */}
-            <div className="col-md-9">
-              <h4 className="text-primary mb-3">{data.name}</h4>
-              <p><strong>Email:</strong> {data.email}</p>
-              <p><strong>Industry:</strong> {data.industry}</p>
-              <p><strong>Description:</strong> {data.description}</p>
-              <p>
-                <strong>Products/Services:</strong>
-                {data.products?.length ? (
-                  <ul className="mb-0 mt-1">
-                    {data.products.map((p, i) => (
-                      <li key={i}>{p}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <span className="text-muted ms-2">Not listed</span>
-                )}
-              </p>
-            </div>
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Manage Section */}
-      <div className="card shadow-sm mt-4">
-        <div className="card-body">
-          <h5 className="card-title text-primary">Manage</h5>
-          <div className="row mt-3">
-            <div className="col-md-4 mb-2">
-              <button className="btn btn-success w-100">Create New Tender</button>
-            </div>
-            <div className="col-md-4 mb-2">
-              <button className="btn btn-outline-primary w-100">View My Tenders</button>
-            </div>
-            <div className="col-md-4 mb-2">
-              <button className="btn btn-outline-primary w-100">View Applications</button>
-            </div>
+
+      <div className="card shadow-sm p-4">
+        <h5 className="text-primary fw-bold mb-4">Quick Actions</h5>
+        <div className="row g-3">
+          <div className="col-md-3 col-sm-6">
+            <Link to="/create-tender" className="btn btn-success w-100">
+              📝 Create Tender
+            </Link>
+          </div>
+          <div className="col-md-3 col-sm-6">
+            <Link to="/tenders" className="btn btn-outline-primary w-100">
+              📂 My Tenders
+            </Link>
+          </div>
+          <div className="col-md-3 col-sm-6">
+            <Link to="/applications" className="btn btn-outline-primary w-100">
+              📥 View Applications
+            </Link>
+          </div>
+          <div className="col-md-3 col-sm-6">
+            <Link to="/browse" className="btn btn-outline-secondary w-100">
+              🔍 Browse All Tenders
+            </Link>
           </div>
         </div>
       </div>
