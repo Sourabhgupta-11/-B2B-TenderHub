@@ -9,6 +9,7 @@ import CreateCompanyPage from './pages/CreateCompany.js';
 import Navbar from './components/Navbar.js';
 import BrowseTendersPage from './pages/BrowseTenders'; 
 import CompanySearchPage from './pages/CompanySearch.js';
+import EditCompanyPage from './pages/EditCompanyPage.js';
 
 function App() {
   const isLoggedIn = !!localStorage.getItem('token');
@@ -23,10 +24,11 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/create-company" element={isLoggedIn ? <CreateCompanyPage /> : <Navigate to="/login" />} />
         <Route path="/dashboard" element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" />} />
+        <Route path="/edit-company" element={isLoggedIn ? <EditCompanyPage /> : <Navigate to="/login" />} />
         <Route path="/tenders" element={isLoggedIn ? <MyTendersPage/> : <Navigate to="/login" />} />
         <Route path="/create-tender" element={isLoggedIn ? <CreateTenderPage/> : <Navigate to="/login" />} />
         <Route path="/browse" element={isLoggedIn ? <BrowseTendersPage /> : <Navigate to="/login" />} />
-        <Route path="/companies" element={<CompanySearchPage />} />
+        <Route path="/companies" element={isLoggedIn ? <CompanySearchPage /> : <Navigate to="/login" />} />
       </Routes>
     </Router>
   );

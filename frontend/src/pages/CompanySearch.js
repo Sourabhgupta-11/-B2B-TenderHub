@@ -82,7 +82,7 @@ const CompanySearchPage = () => {
                 <p className="mb-2"><strong>Industry:</strong> {company.industry}</p>
                 <p className="mb-2"><strong>Email:</strong> {company.userId.email}</p>
                 <p><strong>Description:</strong> {company.description}</p>
-                <p>
+                <div>
                   <strong>Products/Services:</strong>{' '}
                   {company.products?.length ? (
                     <ul className="mb-0 mt-1 ps-3">
@@ -93,7 +93,7 @@ const CompanySearchPage = () => {
                   ) : (
                     <span className="text-muted ms-2">Not listed</span>
                   )}
-                </p>
+                </div>
                 {company.logoUrl && (
                   <div className="mt-3 text-center">
                     <img

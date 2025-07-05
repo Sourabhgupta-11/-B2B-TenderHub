@@ -9,8 +9,7 @@ const BrowseTendersPage = () => {
   const fetchAllTenders = async () => {
     try {
       const res = await axios.get("/tender/others");
-      console.log(res.data);
-      setTenders(res.data);
+      setTenders(res.data|| []);
     } catch (err) {
       setTenders([]);
       setError("Failed to load tenders");

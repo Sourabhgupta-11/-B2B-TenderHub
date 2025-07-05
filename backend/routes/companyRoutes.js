@@ -29,7 +29,6 @@ router.get('/me', jwtAuthMiddleware, async (req, res) => {
   try {
     const userId= req.user.id;
 
-
     const company = await Company.findOne({ userId}).populate('userId', 'email');
 
     if (!company) {

@@ -72,7 +72,7 @@ const Dashboard = () => {
             <p className="mb-2">
               <span className="fw-semibold text-muted">📝 Description:</span> {data.description}
             </p>
-            <p className="mb-2">
+            <div className="mb-2">
               <span className="fw-semibold text-muted">🧰 Products/Services:</span>{' '}
               {data.products?.length ? (
                 <ul className="mb-0 ps-3 mt-1">
@@ -83,7 +83,7 @@ const Dashboard = () => {
               ) : (
                 <span className="text-muted">Not listed</span>
               )}
-            </p>
+            </div>
           </div>
         </div>
       </div>

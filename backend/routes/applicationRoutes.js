@@ -48,4 +48,23 @@ router.get('/my', jwtAuthMiddleware, async (req, res) => {
   }
 });
 
+// Get applications received for tenders created by the logged-in company
+router.get('/received', jwtAuthMiddleware, async (req, res) => {
+  try {
+    // Find all tenders created by the current company
+    const myTenders = await Tender.find({ createdBy: req.user.id }).select('_id');
+
+    const tenderIds = myTenders.map(t => t._id);
+
+    // Find applications where tenderId is in my tenders
+    const applications = await Application.find({ tenderId: { $in: tenderIds } })
+      .populate('tenderId', 'title')
+      .populate('companyId', 'name email industry');
+
+    res.json(applications);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
