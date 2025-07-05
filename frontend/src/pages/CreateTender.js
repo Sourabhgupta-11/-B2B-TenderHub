@@ -23,11 +23,10 @@ const CreateTenderPage = () => {
     setError('');
     setSuccessMsg('');
     try {
-      const res = await axios.post('/tender/create', formData);
+      await axios.post('/tender/create', formData);
       setSuccessMsg('Tender created successfully!');
       setFormData({ title: '', description: '', deadline: '', budget: '' });
 
-      // Redirect after a short delay
       setTimeout(() => navigate('/tenders'), 1000);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to create tender.');
