@@ -78,6 +78,17 @@ const CompanySearchPage = () => {
           <div className="col-md-6" key={company._id}>
             <div className="card h-100 shadow-sm">
               <div className="card-body">
+                {company.logoUrl && (
+                  <div className="text-center mb-3">
+                    <img
+                      src={company.logoUrl}
+                      alt="Logo"
+                      className="img-fluid rounded border"
+                      style={{ maxHeight: '80px' }}
+                    />
+                  </div>
+                )}
+
                 <h5 className="card-title text-primary">{company.name}</h5>
                 <p className="mb-2"><strong>Industry:</strong> {company.industry}</p>
                 <p className="mb-2"><strong>Email:</strong> {company.userId.email}</p>
@@ -94,16 +105,6 @@ const CompanySearchPage = () => {
                     <span className="text-muted ms-2">Not listed</span>
                   )}
                 </div>
-                {company.logoUrl && (
-                  <div className="mt-3 text-center">
-                    <img
-                      src={company.logoUrl}
-                      alt="Logo"
-                      className="img-fluid rounded border"
-                      style={{ maxHeight: '100px' }}
-                    />
-                  </div>
-                )}
               </div>
             </div>
           </div>

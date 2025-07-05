@@ -78,11 +78,26 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Update a company
-router.put('/:id', jwtAuthMiddleware, async (req, res) => {
+// Update a company with optional logo upload
+router.put('/:id', jwtAuthMiddleware, upload.single('logo'), async (req, res) => {
   try {
-    const updated = await Company.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators:true });
+    const updateData = {
+      name: req.body.name,
+      industry: req.body.industry,
+      description: req.body.description,
+      products: req.body.products ? JSON.parse(req.body.products) : []
+    };
+    if (req.file && req.file.path) {
+      updateData.logoUrl = req.file.path; 
+    }
+
+    const updated = await Company.findByIdAndUpdate(req.params.id, updateData, {
+      new: true,
+      runValidators: true
+    });
+
     if (!updated) return res.status(404).json({ error: 'Company not found' });
+
     res.json(updated);
   } catch (err) {
     res.status(400).json({ error: err.message });

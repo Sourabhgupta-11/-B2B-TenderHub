@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import StartPage from './pages/StartPage';
 import LoginPage from './pages/Login';
 import SignupPage from './pages/Signup';
 import Dashboard from './pages/Dashboard';
@@ -20,8 +19,7 @@ function App() {
     <Router>
       <Navbar/>
       <Routes>
-        <Route path="/" element={<Navigate to="/auth" />} />
-        <Route path="/auth" element={<StartPage />} />
+        <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/create-company" element={isLoggedIn ? <CreateCompanyPage /> : <Navigate to="/login" />} />
@@ -33,7 +31,6 @@ function App() {
         <Route path="/companies" element={isLoggedIn ? <CompanySearchPage /> : <Navigate to="/login" />} />
         <Route path='/applications' element={isLoggedIn? <MyApplicationsPage/>: <Navigate to='login'/>}/>
         <Route path="/received-applications" element={isLoggedIn ? <ReceivedApplicationsPage /> : <Navigate to="/login" />} />
-
       </Routes>
     </Router>
   );

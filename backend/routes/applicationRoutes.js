@@ -97,17 +97,14 @@ router.put('/:applicationId/approve', jwtAuthMiddleware, async (req, res) => {
     const application = await Application.findById(applicationId);
     if (!application) return res.status(404).json({ error: 'Application not found' });
 
-    // Check if tender belongs to the logged-in company
     const tender = await Tender.findById(application.tenderId);
     if (!tender || tender.createdBy.toString() !== company.id) {
       return res.status(403).json({ error: 'Not authorized to approve this application' });
     }
 
-    // Set this application to approved
     application.status = 'approved';
     await application.save();
 
-    // Reject all other applications for the same tender
     await Application.updateMany(
       {
         tenderId: application.tenderId,

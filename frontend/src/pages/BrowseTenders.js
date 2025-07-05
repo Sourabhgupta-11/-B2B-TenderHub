@@ -53,7 +53,6 @@ const BrowseTendersPage = () => {
         </div>
       </div>
 
-      {/* Render modal outside container for correct positioning */}
       {selectedTenderId && (
         <ApplyModal
           tenderId={selectedTenderId}

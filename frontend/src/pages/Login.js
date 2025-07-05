@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from '../api/axiosConfig';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -13,13 +13,13 @@ const LoginPage = () => {
     setErrorMsg('');
     try {
       const res = await axios.post('/auth/login', { email, password });
-      const data=await res.data
-      if(data.success){
-            localStorage.setItem('token',data.token)
-            navigate("/dashboard")
+      const data = res.data;
+
+      if (data.success) {
+        localStorage.setItem('token', data.token);
+        navigate('/dashboard');
       }
-    } 
-    catch (err) {
+    } catch (err) {
       setErrorMsg(err.response?.data?.error || 'Login failed');
     }
   };
@@ -58,6 +58,10 @@ const LoginPage = () => {
 
           <button type="submit" className="btn btn-primary w-100">Login</button>
         </form>
+
+        <p className="text-center mt-3 mb-0">
+          Don’t have an account? <Link to="/signup">Sign up</Link>
+        </p>
       </div>
     </div>
   );

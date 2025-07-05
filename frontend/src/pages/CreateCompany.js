@@ -29,7 +29,7 @@ const CreateCompanyPage = () => {
     form.append('name', formData.name);
     form.append('industry', formData.industry);
     form.append('description', formData.description);
-    form.append('products', formData.products); // comma-separated
+    form.append('products', formData.products); 
     if (formData.logo) form.append('logo', formData.logo);
 
     try {

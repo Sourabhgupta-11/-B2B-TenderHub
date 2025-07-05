@@ -4,8 +4,9 @@ import { useNavigate } from 'react-router-dom';
 
 const EditCompanyPage = () => {
   const [form, setForm] = useState({
-    name: '', industry: '', description: '', products: '', logoUrl: ''
+    name: '', industry: '', description: '', products: ''
   });
+  const [logoFile, setLogoFile] = useState(null);
   const [companyId, setCompanyId] = useState(null);
   const navigate = useNavigate();
 
@@ -18,8 +19,7 @@ const EditCompanyPage = () => {
           name: data.name || '',
           industry: data.industry || '',
           description: data.description || '',
-          products: (data.products || []).join(', '),
-          logoUrl: data.logoUrl || '',
+          products: (data.products || []).join(', ')
         });
       } catch {
         alert('Failed to load company data.');
@@ -31,13 +31,24 @@ const EditCompanyPage = () => {
   const handleChange = (e) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
+  const handleLogoChange = (e) => {
+    setLogoFile(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`/company/${companyId}`, {
-        ...form,
-        products: form.products.split(',').map((p) => p.trim()),
+      const formData = new FormData();
+      formData.append('name', form.name);
+      formData.append('industry', form.industry);
+      formData.append('description', form.description);
+      formData.append('products', JSON.stringify(form.products.split(',').map(p => p.trim())));
+      if (logoFile) formData.append('logo', logoFile);
+
+      await axios.put(`/company/${companyId}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
       });
+
       alert('Company updated successfully');
       navigate('/dashboard');
     } catch (err) {
@@ -49,9 +60,9 @@ const EditCompanyPage = () => {
     <div className="container mt-5">
       <h3 className="text-primary mb-4">Edit Company Profile</h3>
       <form className="card p-4 shadow-sm" onSubmit={handleSubmit}>
-        {['name', 'industry', 'description', 'products', 'logoUrl'].map((field) => (
+        {['name', 'industry', 'description', 'products'].map((field) => (
           <div className="mb-3" key={field}>
-            <label className="form-label text-capitalize">{field === 'logoUrl' ? 'Logo URL' : field}</label>
+            <label className="form-label text-capitalize">{field}</label>
             {field === 'description' ? (
               <textarea
                 name={field}
@@ -70,6 +81,13 @@ const EditCompanyPage = () => {
             )}
           </div>
         ))}
+
+        {/* File Upload */}
+        <div className="mb-3">
+          <label className="form-label">Upload New Logo</label>
+          <input type="file" className="form-control" accept="image/*" onChange={handleLogoChange} />
+        </div>
+
         <button type="submit" className="btn btn-primary">Update Profile</button>
       </form>
     </div>

@@ -24,7 +24,7 @@ const ReceivedApplicationsPage = () => {
     try {
       await axios.put(`/application/${appId}/approve`);
       alert('Application approved');
-      fetchReceivedApps(); // Refresh
+      fetchReceivedApps(); 
     } catch (err) {
       alert(err.response?.data?.error || 'Approval failed.');
     }

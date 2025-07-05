@@ -52,7 +52,7 @@ router.get('/', async (req, res) => {
 
     const total = await Tender.countDocuments();
     const tenders = await Tender.find()
-      .populate('createdBy', 'name industry') // optional: show who created it
+      .populate('createdBy', 'name industry') 
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);

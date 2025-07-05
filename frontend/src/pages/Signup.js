@@ -43,7 +43,7 @@ const SignupPage = () => {
             <label className="form-label">Password</label>
             <input type="password" name="password" className="form-control" value={form.password} onChange={handleChange} required />
           </div>
-          <button type="submit" className="btn btn-primary w-100">Create Account</button>
+          <button type="submit" className="btn btn-primary w-100" onSubmit={handleSubmit}>Create Account</button>
         </form>
       </div>
     </div>
