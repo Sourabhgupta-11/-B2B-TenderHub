@@ -7,7 +7,7 @@ const cors=require('cors')
 //-------------------------------------------------------------------------//
 app.use(express.json())
 app.use(cors({
-  origin: 'https://b2b-tender-hub.vercel.app/',
+  origin: 'https://b2b-tender-hub.vercel.app',
   credentials: true
 }));
 
