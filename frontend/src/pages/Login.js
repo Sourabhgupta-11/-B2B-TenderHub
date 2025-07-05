@@ -14,11 +14,12 @@ const LoginPage = () => {
     try {
       const res = await axios.post('/auth/login', { email, password });
       const data = res.data;
-
-      if (data.success) {
-        localStorage.setItem('token', data.token);
+    if (data.success) {
+      localStorage.setItem('token', data.token);
+      setTimeout(() => {
         navigate('/dashboard');
-      }
+      }, 100);
+    }
     } catch (err) {
       setErrorMsg(err.response?.data?.error || 'Login failed');
     }
