@@ -107,6 +107,11 @@ const Dashboard = () => {
               📥 View Applications
             </Link>
           </div>
+         <div className="col-md-3 col-sm-6">
+          <Link to="/received-applications" className="btn btn-outline-primary w-100">
+          Applications Received
+          </Link>
+          </div>
           <div className="col-md-3 col-sm-6">
             <Link to="/browse" className="btn btn-outline-secondary w-100">
               🔍 Browse All Tenders

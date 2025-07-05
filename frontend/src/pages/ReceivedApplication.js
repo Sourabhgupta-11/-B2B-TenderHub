@@ -1,34 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../api/axiosConfig';
 
-const MyApplicationsPage = () => {
+const ReceivedApplicationsPage = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState('');
 
-  const fetchApplications = async () => {
+  const fetchReceivedApps = async () => {
     try {
-      const res = await axios.get('/application/my');
+      const res = await axios.get('/application/received');
       console.log(res.data)
       setApplications(res.data || []);
     } catch (err) {
-      setErrorMsg('Failed to fetch applications.');
+      setErrorMsg('Failed to fetch received applications.');
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchApplications();
+    fetchReceivedApps();
   }, []);
 
   return (
     <div className="container mt-5">
-      <h3 className="text-primary mb-4">My Applications</h3>
+      <h3 className="text-primary mb-4">Applications Received</h3>
 
       {loading && <p>Loading...</p>}
       {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
-      {!loading && applications.length === 0 && <p className="text-muted">No applications submitted yet.</p>}
+      {!loading && applications.length === 0 && <p className="text-muted">No applications received yet.</p>}
 
       <div className="row g-4">
         {applications.map((app) => (
@@ -36,9 +36,10 @@ const MyApplicationsPage = () => {
             <div className="card h-100 shadow-sm">
               <div className="card-body">
                 <h5 className="card-title text-primary">{app.tenderId?.title}</h5>
+                <p><strong>From:</strong> {app.companyId?.name}</p>
+                <p><strong>Industry:</strong> {app.companyId?.industry}</p>
                 <p><strong>Proposal:</strong> {app.proposalText}</p>
-                <p><strong>Bid Amount:</strong> ₹{app.bidAmount}</p>
-                <p><strong>Deadline:</strong> {new Date(app.tenderId?.deadline).toLocaleDateString()}</p>
+                <p><strong>Bid:</strong> ₹{app.bidAmount}</p>
               </div>
             </div>
           </div>
@@ -48,4 +49,4 @@ const MyApplicationsPage = () => {
   );
 };
 
-export default MyApplicationsPage;
+export default ReceivedApplicationsPage;
