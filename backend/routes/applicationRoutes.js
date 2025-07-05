@@ -84,5 +84,43 @@ router.get('/received', jwtAuthMiddleware, async (req, res) => {
   }
 });
 
+// Approve an application
+router.put('/:applicationId/approve', jwtAuthMiddleware, async (req, res) => {
+  try {
+    const userId= req.user.id;
+    const company = await Company.findOne({ userId});
+    if (!company) {
+      return res.status(404).json({ success: false, error: 'Company not found' });
+    }
+    const applicationId = req.params.applicationId;
+
+    const application = await Application.findById(applicationId);
+    if (!application) return res.status(404).json({ error: 'Application not found' });
+
+    // Check if tender belongs to the logged-in company
+    const tender = await Tender.findById(application.tenderId);
+    if (!tender || tender.createdBy.toString() !== company.id) {
+      return res.status(403).json({ error: 'Not authorized to approve this application' });
+    }
+
+    // Set this application to approved
+    application.status = 'approved';
+    await application.save();
+
+    // Reject all other applications for the same tender
+    await Application.updateMany(
+      {
+        tenderId: application.tenderId,
+        _id: { $ne: application._id }
+      },
+      { $set: { status: 'rejected' } }
+    );
+
+    res.json({ success: true, message: 'Application approved' });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 module.exports = router;

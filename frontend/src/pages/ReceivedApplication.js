@@ -9,12 +9,24 @@ const ReceivedApplicationsPage = () => {
   const fetchReceivedApps = async () => {
     try {
       const res = await axios.get('/application/received');
-      console.log(res.data)
       setApplications(res.data || []);
     } catch (err) {
       setErrorMsg('Failed to fetch received applications.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleApprove = async (appId) => {
+    const confirm = window.confirm('Are you sure you want to approve this application? Others will be rejected.');
+    if (!confirm) return;
+
+    try {
+      await axios.put(`/application/${appId}/approve`);
+      alert('Application approved');
+      fetchReceivedApps(); // Refresh
+    } catch (err) {
+      alert(err.response?.data?.error || 'Approval failed.');
     }
   };
 
@@ -40,6 +52,21 @@ const ReceivedApplicationsPage = () => {
                 <p><strong>Industry:</strong> {app.companyId?.industry}</p>
                 <p><strong>Proposal:</strong> {app.proposalText}</p>
                 <p><strong>Bid:</strong> ₹{app.bidAmount}</p>
+                <p>
+                  <strong>Status:</strong>{' '}
+                  <span className={`badge ${
+                    app.status === 'approved' ? 'bg-success' :
+                    app.status === 'rejected' ? 'bg-danger' : 'bg-secondary'
+                  }`}>
+                    {app.status}
+                  </span>
+                </p>
+
+                {app.status === 'pending' && (
+                  <button className="btn btn-success btn-sm mt-2" onClick={() => handleApprove(app._id)}>
+                    Approve
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -50,3 +77,4 @@ const ReceivedApplicationsPage = () => {
 };
 
 export default ReceivedApplicationsPage;
+

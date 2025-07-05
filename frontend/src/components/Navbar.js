@@ -3,20 +3,17 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const isAuthenticated = !!localStorage.getItem('token');
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
   };
 
-  const isAuthenticated = !!localStorage.getItem('token');
-
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-primary shadow">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
-          TenderHub
-        </Link>
+        <Link className="navbar-brand" to="/">TenderHub</Link>
 
         <button
           className="navbar-toggler"
@@ -34,19 +31,13 @@ const Navbar = () => {
           {isAuthenticated && (
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className="nav-link" to="/dashboard">
-                  Dashboard
-                </Link>
+                <Link className="nav-link" to="/dashboard">Dashboard</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/tenders">
-                  Tenders
-                </Link>
+                <Link className="nav-link" to="/tenders">Tenders</Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/companies">
-                  Companies
-                </Link>
+                <Link className="nav-link" to="/companies">Companies</Link>
               </li>
             </ul>
           )}
@@ -55,16 +46,15 @@ const Navbar = () => {
             {!isAuthenticated ? (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/login">
-                    Login
-                  </Link>
+                  <Link className="nav-link" to="/login">Login</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/signup">Signup</Link>
                 </li>
               </>
             ) : (
               <li className="nav-item">
-                <button className="btn btn-sm btn-light" onClick={handleLogout}>
-                  Logout
-                </button>
+                <button className="btn btn-sm btn-light" onClick={handleLogout}>Logout</button>
               </li>
             )}
           </ul>
