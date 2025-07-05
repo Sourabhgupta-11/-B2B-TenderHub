@@ -1,4 +1,14 @@
 {
+  "name": "tenderhub-backend",
+  "version": "1.0.0",
+  "description": "tenderhub - B2B tender management platform",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cloudinary": "^1.41.3",
