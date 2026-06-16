@@ -1,0 +1,459 @@
+/* ===========================================================================
+   TenderHub Design System
+   ---------------------------------------------------------------------------
+   Palette:
+     --th-navy       deep ink navy   — hero / dark surfaces, headings on light
+     --th-navy-700   secondary navy  — gradients, hover states
+     --th-indigo     brand indigo    — primary actions, links
+     --th-indigo-600 indigo (hover)
+     --th-amber      signal amber    — "open for bids" stamps, highlights
+     --th-bg         app background
+     --th-surface    card / panel surface
+     --th-ink        primary text
+     --th-ink-mute   secondary text
+     --th-border     hairline borders
+     --th-green      success / approved
+     --th-red        danger / rejected
+
+   Type:
+     Display — Sora (headings, stat numbers, brand)
+     Body    — Inter (everything else)
+=========================================================================== */
+
+:root {
+  --th-navy: #0f1b3d;
+  --th-navy-700: #1b2a6b;
+  --th-indigo: #4d5fff;
+  --th-indigo-600: #3a46d6;
+  --th-amber: #ffb020;
+  --th-amber-600: #e89a0c;
+  --th-bg: #f5f7fb;
+  --th-surface: #ffffff;
+  --th-ink: #1a1f36;
+  --th-ink-mute: #6b7280;
+  --th-border: #e7eaf2;
+  --th-green: #16a974;
+  --th-green-bg: #e7f7f1;
+  --th-red: #e5484d;
+  --th-red-bg: #fdecec;
+  --th-amber-bg: #fff6e5;
+
+  --th-radius: 16px;
+  --th-radius-sm: 10px;
+  --th-radius-pill: 999px;
+
+  --th-shadow-sm: 0 2px 10px rgba(15, 27, 61, 0.06);
+  --th-shadow-md: 0 10px 30px rgba(15, 27, 61, 0.10);
+  --th-shadow-lg: 0 24px 60px rgba(15, 27, 61, 0.18);
+
+  --th-font-display: 'Sora', 'Segoe UI', sans-serif;
+  --th-font-body: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Base                                                                     */
+/* ---------------------------------------------------------------------- */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--th-bg);
+  color: var(--th-ink);
+  font-family: var(--th-font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--th-font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--th-navy);
+}
+
+a {
+  color: var(--th-indigo);
+}
+
+a:hover {
+  color: var(--th-indigo-600);
+}
+
+/* Page entrance animation — applied to each route's top-level wrapper */
+.th-page {
+  animation: th-fade-up 0.45s ease both;
+}
+
+@keyframes th-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .th-page,
+  .card,
+  .btn,
+  .th-tender-card {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Visible keyboard focus everywhere */
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+.form-control:focus-visible,
+.form-select:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(77, 95, 255, 0.35);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Buttons                                                                  */
+/* ---------------------------------------------------------------------- */
+
+.btn {
+  font-family: var(--th-font-body);
+  font-weight: 600;
+  border-radius: var(--th-radius-sm);
+  letter-spacing: 0.01em;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn.btn-primary {
+  background: linear-gradient(135deg, var(--th-indigo) 0%, var(--th-indigo-600) 100%);
+  border: none;
+  box-shadow: 0 6px 16px rgba(77, 95, 255, 0.28);
+}
+
+.btn.btn-primary:hover,
+.btn.btn-primary:focus {
+  background: linear-gradient(135deg, var(--th-indigo-600) 0%, var(--th-indigo) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(77, 95, 255, 0.34);
+}
+
+.btn.btn-success {
+  background: linear-gradient(135deg, #1cc88a 0%, var(--th-green) 100%);
+  border: none;
+  box-shadow: 0 6px 16px rgba(22, 169, 116, 0.26);
+}
+
+.btn.btn-success:hover,
+.btn.btn-success:focus {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(22, 169, 116, 0.3);
+}
+
+.btn.btn-outline-primary {
+  color: var(--th-indigo-600);
+  border-color: var(--th-indigo);
+}
+
+.btn.btn-outline-primary:hover {
+  background: var(--th-indigo);
+  border-color: var(--th-indigo);
+  transform: translateY(-1px);
+}
+
+.btn.btn-outline-secondary:hover,
+.btn.btn-outline-danger:hover {
+  transform: translateY(-1px);
+}
+
+.btn.btn-light {
+  font-weight: 600;
+}
+
+.btn-lg {
+  border-radius: 12px;
+  padding: 0.75rem 1.6rem;
+}
+
+/* Amber "stamp" CTA — used for guest mode entry points */
+.btn-stamp {
+  background: linear-gradient(135deg, #ffc34d 0%, var(--th-amber) 100%);
+  color: var(--th-navy);
+  border: none;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(255, 176, 32, 0.35);
+}
+
+.btn-stamp:hover {
+  color: var(--th-navy);
+  background: linear-gradient(135deg, var(--th-amber) 0%, var(--th-amber-600) 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(255, 176, 32, 0.4);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Cards                                                                    */
+/* ---------------------------------------------------------------------- */
+
+.card {
+  border: 1px solid var(--th-border);
+  border-radius: var(--th-radius);
+  box-shadow: var(--th-shadow-sm);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--th-shadow-md);
+}
+
+.card-header {
+  border-radius: var(--th-radius) var(--th-radius) 0 0 !important;
+  background: #fbfcfe;
+  border-bottom: 1px solid var(--th-border);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Forms                                                                    */
+/* ---------------------------------------------------------------------- */
+
+.form-control,
+.form-select {
+  border-radius: var(--th-radius-sm);
+  border-color: var(--th-border);
+  padding-top: 0.55rem;
+  padding-bottom: 0.55rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--th-indigo);
+  box-shadow: 0 0 0 0.2rem rgba(77, 95, 255, 0.15);
+}
+
+.form-label {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--th-navy);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Badges & alerts                                                          */
+/* ---------------------------------------------------------------------- */
+
+.badge {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  border-radius: var(--th-radius-pill);
+  padding: 0.4em 0.85em;
+}
+
+.badge.bg-success {
+  background-color: var(--th-green-bg) !important;
+  color: var(--th-green) !important;
+}
+
+.badge.bg-danger {
+  background-color: var(--th-red-bg) !important;
+  color: var(--th-red) !important;
+}
+
+.badge.bg-secondary {
+  background-color: var(--th-amber-bg) !important;
+  color: #b06b00 !important;
+}
+
+.alert {
+  border: none;
+  border-radius: var(--th-radius-sm);
+}
+
+.alert-danger {
+  background-color: var(--th-red-bg);
+  color: #b02327;
+}
+
+.alert-success {
+  background-color: var(--th-green-bg);
+  color: #0f7a52;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Layout helpers                                                           */
+/* ---------------------------------------------------------------------- */
+
+.th-section {
+  padding: 4rem 0;
+}
+
+.th-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--th-indigo-600);
+}
+
+.th-muted {
+  color: var(--th-ink-mute);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Avatars (used in place of company logos when none is uploaded)          */
+/* ---------------------------------------------------------------------- */
+
+.th-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--th-font-display);
+  font-weight: 700;
+  border-radius: 50%;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.th-avatar-sm {
+  width: 36px;
+  height: 36px;
+  font-size: 0.85rem;
+}
+
+.th-avatar-md {
+  width: 56px;
+  height: 56px;
+  font-size: 1.2rem;
+}
+
+.th-avatar-lg {
+  width: 96px;
+  height: 96px;
+  font-size: 2rem;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Loading spinner                                                          */
+/* ---------------------------------------------------------------------- */
+
+.th-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+  min-height: 40vh;
+  color: var(--th-ink-mute);
+}
+
+.th-spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid rgba(77, 95, 255, 0.18);
+  border-top-color: var(--th-indigo);
+  animation: th-spin 0.8s linear infinite;
+}
+
+@keyframes th-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+/* Empty states                                                             */
+/* ---------------------------------------------------------------------- */
+
+.th-empty {
+  text-align: center;
+  padding: 3.5rem 1.5rem;
+  border: 1px dashed var(--th-border);
+  border-radius: var(--th-radius);
+  background: var(--th-surface);
+  color: var(--th-ink-mute);
+}
+
+.th-empty i {
+  font-size: 2rem;
+  color: var(--th-indigo);
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Page header (used at the top of inner pages)                            */
+/* ---------------------------------------------------------------------- */
+
+.th-page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.th-page-header h2,
+.th-page-header h3 {
+  margin-bottom: 0.25rem;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Guest mode banner                                                        */
+/* ---------------------------------------------------------------------- */
+
+.th-guest-banner {
+  background: linear-gradient(135deg, var(--th-navy) 0%, var(--th-navy-700) 100%);
+  color: #fff;
+  border-radius: var(--th-radius);
+  padding: 0.9rem 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+  box-shadow: var(--th-shadow-sm);
+}
+
+.th-guest-banner .th-guest-text {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.95rem;
+}
+
+.th-guest-banner .th-guest-text i {
+  color: var(--th-amber);
+  font-size: 1.2rem;
+}
+
+.th-guest-banner strong {
+  color: var(--th-amber);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Scrollbar (cosmetic, webkit only)                                        */
+/* ---------------------------------------------------------------------- */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cfd5e6;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}

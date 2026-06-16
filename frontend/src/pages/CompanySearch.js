@@ -1,114 +1,139 @@
 import React, { useEffect, useState } from 'react';
 import axios from '../api/axiosConfig';
+import GuestBanner from '../components/GuestBanner';
+
+const AVATAR_COLORS = ['#4d5fff','#16a974','#ffb020','#e5484d','#7c3aed','#0ea5e9','#f97316','#14b8a6'];
+const getColor = (name) => AVATAR_COLORS[(name?.charCodeAt(0) || 0) % AVATAR_COLORS.length];
 
 const CompanySearchPage = () => {
   const [companies, setCompanies] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
   const [searchField, setSearchField] = useState('name');
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const fetchCompanies = async () => {
-    try {
-      const res = await axios.get('/company');
-      setCompanies(res.data || []);
-      setFiltered(res.data || []);
-    } catch (err) {
-      setError('Failed to load companies');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    fetchCompanies();
+    (async () => {
+      try {
+        const res = await axios.get('/company');
+        setCompanies(res.data || []);
+        setFiltered(res.data || []);
+      } catch {
+        setError('Failed to load companies.');
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, []);
 
-  const handleSearch = (e) => {
-    const term = e.target.value.toLowerCase();
-    setSearchTerm(term);
-
-    const result = companies.filter((c) => {
+  useEffect(() => {
+    const term = search.toLowerCase();
+    if (!term) { setFiltered(companies); return; }
+    setFiltered(companies.filter((c) => {
       if (searchField === 'name') return c.name?.toLowerCase().includes(term);
       if (searchField === 'industry') return c.industry?.toLowerCase().includes(term);
       if (searchField === 'products') return c.products?.some(p => p.toLowerCase().includes(term));
       return false;
-    });
-
-    setFiltered(result);
-  };
+    }));
+  }, [search, searchField, companies]);
 
   return (
-    <div className="container mt-5">
-      <h3 className="text-primary mb-4 fw-bold">Explore Companies</h3>
+    <div className="th-page container" style={{ paddingTop: 80, paddingBottom: 60 }}>
+      <GuestBanner />
 
-      <div className="row mb-4 g-2 align-items-center">
-        <div className="col-md-3">
-          <select
-            className="form-select"
-            value={searchField}
-            onChange={(e) => setSearchField(e.target.value)}
-          >
-            <option value="name">Search by Name</option>
-            <option value="industry">Search by Industry</option>
-            <option value="products">Search by Product/Service</option>
-          </select>
+      <div className="th-page-header">
+        <div>
+          <p className="th-eyebrow mb-1">Partner Discovery</p>
+          <h2 className="mb-0">Explore Companies</h2>
         </div>
+        <span className="badge" style={{ background: '#eef0ff', color: 'var(--th-indigo-600)', fontSize: '0.85rem', padding: '0.5em 1em' }}>
+          {filtered.length} companies
+        </span>
+      </div>
 
-        <div className="col-md-9">
+      {/* Search bar */}
+      <div className="card p-3 mb-4 d-flex flex-wrap align-items-center gap-3" style={{ flexDirection: 'row' }}>
+        <div className="input-group" style={{ maxWidth: 400 }}>
+          <select className="input-group-text border-end-0 form-select" style={{ maxWidth: 165, background: 'var(--th-bg)', borderColor: 'var(--th-border)', fontSize: '0.85rem', borderRadius: 'var(--th-radius-sm) 0 0 var(--th-radius-sm)' }}
+            value={searchField} onChange={e => { setSearchField(e.target.value); setSearch(''); }}>
+            <option value="name">By Name</option>
+            <option value="industry">By Industry</option>
+            <option value="products">By Service</option>
+          </select>
           <input
             type="text"
-            placeholder={`Search companies by ${searchField}`}
             className="form-control"
-            value={searchTerm}
-            onChange={handleSearch}
+            placeholder={`Search companies by ${searchField}…`}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
           />
+          {search && (
+            <button className="input-group-text border" style={{ cursor: 'pointer', background: 'var(--th-bg)' }} onClick={() => setSearch('')}>
+              <i className="bi bi-x text-muted" />
+            </button>
+          )}
         </div>
       </div>
 
-      {loading && <p>Loading...</p>}
-      {error && <div className="alert alert-danger">{error}</div>}
+      {loading && <div className="th-loading"><div className="th-spinner" /><span>Loading companies…</span></div>}
+      {error && <div className="alert alert-danger"><i className="bi bi-exclamation-circle me-2" />{error}</div>}
+
       {!loading && filtered.length === 0 && (
-        <p className="text-muted">No companies found matching your search.</p>
+        <div className="th-empty">
+          <i className="bi bi-building" />
+          <h5 className="mb-1">No companies found</h5>
+          <p className="mb-0">Try a different search term.</p>
+        </div>
       )}
 
       <div className="row g-4">
-        {filtered.map((company) => (
-          <div className="col-md-6" key={company._id}>
-            <div className="card h-100 shadow-sm">
-              <div className="card-body">
-                {company.logoUrl && (
-                  <div className="text-center mb-3">
-                    <img
-                      src={company.logoUrl}
-                      alt="Logo"
-                      className="img-fluid rounded border"
-                      style={{ maxHeight: '80px' }}
-                    />
+        {filtered.map((company) => {
+          const color = company.avatarColor || getColor(company.name);
+          const initials = company.name?.split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase() || '?';
+          return (
+            <div className="col-md-6" key={company._id}>
+              <div className="th-tender-card h-100" style={{ gap: '0.75rem' }}>
+                {/* Header row */}
+                <div className="d-flex align-items-center gap-3">
+                  {company.logoUrl
+                    ? <img src={company.logoUrl} alt="Logo" style={{ width: 52, height: 52, objectFit: 'contain', borderRadius: 12, border: '1px solid var(--th-border)' }} />
+                    : <div className="th-avatar th-avatar-md" style={{ background: color, color: '#fff' }}>{initials}</div>}
+                  <div>
+                    <h5 className="mb-0" style={{ fontFamily: 'var(--th-font-display)', fontSize: '1rem', color: 'var(--th-navy)' }}>{company.name}</h5>
+                    <span className="badge" style={{ background: '#eef0ff', color: 'var(--th-indigo-600)', fontSize: '0.75rem', marginTop: 3 }}>{company.industry}</span>
+                  </div>
+                </div>
+
+                {/* Description */}
+                {company.description && (
+                  <p className="th-muted mb-0" style={{ fontSize: '0.87rem', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    {company.description}
+                  </p>
+                )}
+
+                {/* Products */}
+                {company.products?.length > 0 && (
+                  <div>
+                    <p className="th-muted mb-2" style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 600 }}>Services</p>
+                    <div className="d-flex flex-wrap gap-1">
+                      {company.products.map((p, i) => (
+                        <span key={i} className="badge" style={{ background: 'var(--th-bg)', color: 'var(--th-ink)', border: '1px solid var(--th-border)', fontWeight: 500, fontSize: '0.78rem' }}>{p}</span>
+                      ))}
+                    </div>
                   </div>
                 )}
 
-                <h5 className="card-title text-primary">{company.name}</h5>
-                <p className="mb-2"><strong>Industry:</strong> {company.industry}</p>
-                <p className="mb-2"><strong>Email:</strong> {company.userId.email}</p>
-                <p><strong>Description:</strong> {company.description}</p>
-                <div>
-                  <strong>Products/Services:</strong>{' '}
-                  {company.products?.length ? (
-                    <ul className="mb-0 mt-1 ps-3">
-                      {company.products.map((p, i) => (
-                        <li key={i}>{p}</li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <span className="text-muted ms-2">Not listed</span>
-                  )}
-                </div>
+                {/* Email */}
+                {company.userId?.email && (
+                  <p className="mb-0 th-muted" style={{ fontSize: '0.8rem', borderTop: '1px solid var(--th-border)', paddingTop: '0.6rem', marginTop: 'auto' }}>
+                    <i className="bi bi-envelope me-1" />{company.userId.email}
+                  </p>
+                )}
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
