@@ -3,7 +3,7 @@ import axios from '../api/axiosConfig';
 import { useNavigate, Link } from 'react-router-dom';
 import { startGuestSession } from '../mock/guestData';
 
-const LoginPage = ({ onLogin }) => {
+const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPw, setShowPw] = useState(false);
@@ -20,7 +20,6 @@ const LoginPage = ({ onLogin }) => {
       const data = res.data;
       if (data.success) {
         localStorage.setItem('token', data.token);
-        onLogin && onLogin();
         navigate('/dashboard');
       }
     } catch (err) {

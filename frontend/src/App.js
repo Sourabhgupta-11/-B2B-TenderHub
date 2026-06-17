@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { isGuestMode } from './mock/guestData';
 import LandingPage from './pages/Landing';
 import LoginPage from './pages/Login';
@@ -22,14 +21,6 @@ const PrivateRoute = ({ element }) => {
 };
 
 function App() {
-  const [authed, setAuthed] = useState(!!localStorage.getItem('token') || isGuestMode());
-
-  useEffect(() => {
-    const check = () => setAuthed(!!localStorage.getItem('token') || isGuestMode());
-    window.addEventListener('storage', check);
-    return () => window.removeEventListener('storage', check);
-  }, []);
-
   return (
     <Router>
       <Navbar />
@@ -38,7 +29,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
 
         {/* Auth pages */}
-        <Route path="/login" element={<LoginPage onLogin={() => setAuthed(true)} />} />
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
 
         {/* Protected pages — work for real users AND guests */}

@@ -63,7 +63,7 @@ const Landing = () => {
           <div className="th-hero-grid" />
         </div>
 
-        <div className="container position-relative py-5">
+        <div className="container position-relative py-5" style={{ paddingTop: '7rem' }}>
           <div className="row align-items-center g-5">
             {/* copy */}
             <div className="col-lg-6">
